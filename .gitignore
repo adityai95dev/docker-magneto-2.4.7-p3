@@ -1,0 +1,48 @@
+# --- Magento build artifacts (safe to ignore) ---
+html/var/
+html/generated/
+html/pub/static/
+html/pub/media/
+html/.cache/
+
+# IDE/OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Docker runtime noise
+*.pid
+
+# --- Nginx related files ---
+nginx/
+nginx.conf.sample
+nginx.conf.sample.bak
+nginx ssl/
+
+# --- Environment / Secrets ---
+.env
+composer-auth.json
+admin-uri.txt
+
+# --- Logs ---
+logs/
+
+# --- Magento vendor directory ---
+html/vendor/
+
+# --- PHP runtime folder ---
+php/
+
+# --- IMPORTANT ---
+# You asked earlier NOT to ignore these, but now rules updated:
+# - html/vendor/   → NOW ignored
+# - logs/          → NOW ignored
+# - .env           → NOW ignored
+# Please double-check if that's really what you want before committing.
+# Also: DO NOT commit TLS private keys!
+*.key
+*.pem
