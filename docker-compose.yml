@@ -1,0 +1,77 @@
+services:
+  php:
+    build:
+      context: ./php
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+    container_name: clientb-08-php
+    volumes:
+      - magento-clientb-html:/var/www/html
+      - ./composer-auth.json:/root/.composer/auth.json:ro
+    working_dir: /var/www/html
+    networks:
+      - magento-clientb-net
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    container_name: clientb-08-nginx
+    depends_on:
+      - php
+    ports:
+      - "8088:80"     # ✅ New HTTP port
+      - "8448:443"    # ✅ New HTTPS port
+    volumes:
+      - ./nginx/magento.conf:/etc/nginx/conf.d/default.conf:ro
+      - magento-clientb-html:/var/www/html
+      - ./nginx.conf.sample:/var/www/html/nginx.conf.sample:ro
+      - "./nginx ssl/i95ssl/i95ssl.pem:/etc/ssl/certs/i95ssl.pem:ro"
+      - "./nginx ssl/i95ssl/i95ssl.key:/etc/ssl/private/i95ssl.key:ro"
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - magento-clientb-net
+
+  mariadb:
+    image: mariadb:${MARIADB_VERSION}
+    container_name: clientb-08-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - clientb-db-data:/var/lib/mysql
+    networks:
+      - magento-clientb-net
+
+  redis:
+    image: redis:${REDIS_VERSION}
+    container_name: clientb-08-redis
+    networks:
+      - magento-clientb-net
+
+  opensearch:
+    image: opensearchproject/opensearch:2.12.0
+    container_name: clientb-08-opensearch
+    environment:
+      - discovery.type=single-node
+      - plugins.security.disabled=true
+      - OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=I95dev@Jiva
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 2g
+    volumes:
+      - clientb-opensearch-data:/usr/share/opensearch/data
+    networks:
+      - magento-clientb-net
+
+volumes:
+  clientb-db-data:
+  clientb-opensearch-data:
+  magento-clientb-html:
+
+networks:
+  magento-clientb-net:
+
