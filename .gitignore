@@ -18,11 +18,10 @@ node_modules/
 *.pid
 
 # --- Nginx related files ---
-nginx/
-nginx.conf.sample
-nginx.conf.sample.bak
-nginx ssl/
-
+# nginx/
+# nginx.conf.sample
+# nginx.conf.sample.bak
+# nginx ssl/
 # --- Environment / Secrets ---
 .env
 composer-auth.json
@@ -35,7 +34,7 @@ logs/
 html/vendor/
 
 # --- PHP runtime folder ---
-php/
+#php/
 
 # --- IMPORTANT ---
 # You asked earlier NOT to ignore these, but now rules updated:
